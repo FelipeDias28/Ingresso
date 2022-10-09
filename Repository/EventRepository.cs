@@ -8,6 +8,7 @@ using Ingresso.Data.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace Ingresso.Repository
 {
@@ -49,27 +50,40 @@ namespace Ingresso.Repository
             }
         }
 
-        public async Task<List<ReadEventDto>> GetEvent(int eventId = 0)
+        public async Task<List<ReadEventDto>> GetAllEvent()
         {
-            List<Event> events;
-            List<ReadEventDto> readEventList = new List<ReadEventDto>();
+            var eventList = await _context.Events.AsNoTracking().ToListAsync();
 
-            if (eventId == 0)
-            {
-                events = await _context.Events.AsNoTracking().ToListAsync();
-            }
-            else
-            {
-                events = await _context.Events.Where(x => x.Id.Equals(eventId)).ToListAsync();
-            }
+            List<ReadEventDto> readEventDtos = _mapper.Map<List<ReadEventDto>>(eventList);
+            return readEventDtos;
+        }
 
-            foreach(var currentEvent in events)
-            {
-                var readEvent = _mapper.Map<ReadEventDto>(currentEvent);
-                readEventList.Add(readEvent);
-            }
+        public async Task<ReadEventDto> GetEventById(int eventId)
+        {
+            var currentEvent = await _context.Events.FirstOrDefaultAsync(x => x.Id.Equals(eventId));
 
-            return readEventList;
+            if (currentEvent == null)
+                throw new Exception("event-not-found");
+
+            var readEvent = _mapper.Map<ReadEventDto>(currentEvent);
+            return readEvent;
+        }
+
+        public async Task<List<ReadUserDto>> GetUsersParticipatingEvent(int eventId)
+        {
+
+            List<User> userList = await _context.Users.ToListAsync();
+
+            IEnumerable<User> query = from user in userList
+                                     where user.Tickets.Any(ticket =>
+                                     ticket.Event.Id == eventId)
+                                     select user;
+
+            userList = query.ToList();
+
+            var readUser = _mapper.Map<List<ReadUserDto>>(userList);
+
+            return readUser;
         }
 
         private async Task CheckIfStatusEventExists(int statusEventId)

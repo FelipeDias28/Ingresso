@@ -42,27 +42,25 @@ namespace Ingresso.Repository
             }
         }
 
-        public async Task<List<ReadUserDto>> GetUsers(Guid userId)
+        public async Task<List<ReadUserDto>> GetAllUsers()
         {
-            List<User> userList;
-            List<ReadUserDto> userDtoList = new List<ReadUserDto>();
+            var userList = await _context.Users.ToListAsync();
 
-            if (userId == Guid.Empty)
-            {
-                userList = await _context.Users.ToListAsync();
-            }
-            else
-            {
-                userList = await _context.Users.Where(x => x.Id.Equals(userId)).ToListAsync();
-            }
-
-            foreach(var user in userList)
-            {
-                var userDto = _mapper.Map<ReadUserDto>(user);
-                userDtoList.Add(userDto);
-            }
+            var userDtoList = _mapper.Map<List<ReadUserDto>>(userList);
 
             return userDtoList;
+        }
+
+        public async Task<ReadUserDto> GetUsersById(Guid userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id.Equals(userId));
+
+            if (user == null)
+                throw new Exception("user-not-found");
+
+            var userDto = _mapper.Map<ReadUserDto>(user);
+
+            return userDto;
         }
 
         public async Task<dynamic> Authenticate(LoginDto model)
@@ -83,6 +81,20 @@ namespace Ingresso.Repository
             };
         }
 
+        public async Task<List<ReadEventDto>> GetEventsUserParticipate(Guid userId)
+        {
+            var eventList = await _context.Events.ToListAsync();
+
+            IEnumerable<Event> query = from currentEvent in eventList
+                                    where currentEvent.Tickets.Any(ticket =>
+                                    ticket.User.Id == userId)
+                                    select currentEvent;
+
+            eventList = query.ToList();
+
+            var readEvent = _mapper.Map<List<ReadEventDto>>(eventList);
+            return readEvent;
+        }
 
         private async Task CheckIfTypeUserExists(CreateUserDto model)
         {

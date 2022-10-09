@@ -1,6 +1,7 @@
 ﻿using Ingresso.Data.DTOs;
 using Ingresso.Entity;
 using Ingresso.Repository.InterfaceService;
+using Ingresso.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,7 +22,6 @@ namespace Ingresso.Controllers
         }
 
         [HttpPost("user")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto model)
         {
             if (!ModelState.IsValid)
@@ -40,10 +40,13 @@ namespace Ingresso.Controllers
         }
 
         [HttpGet("users")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUsersAsync()
         {
-            var allUsers = await _userService.GetUsers(Guid.Empty);
+            var allUsers = await _userService.GetAllUsers();
+
+            if (!allUsers.Any())
+                return NotFound(new { message = "Não foi encontrado nenhum usuário " });
 
             return Ok(allUsers);
         }
@@ -52,12 +55,21 @@ namespace Ingresso.Controllers
         [Authorize]
         public async Task<IActionResult> GetUserByIdAsync([FromRoute] Guid id)
         {
-            var user = await _userService.GetUsers(id);
+            try
+            {
+                var user = await _userService.GetUsersById(id);
 
-            if (!user.Any())
-                return NotFound("usuário não encontrado");
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = ExceptionHandlerService.ExceptionMessage(ex.Message);
 
-            return Ok(user.First());
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                    return BadRequest(errorMessage);
+
+                return StatusCode(500);
+            }
         }
 
         [HttpPost("login")]
@@ -73,6 +85,18 @@ namespace Ingresso.Controllers
             {
                 return NotFound(new { message = "Usuário ou senha inválidos" });
             }
+        }
+
+        [HttpGet("event-user/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetEventsUserParticipateAsync([FromRoute] Guid id)
+        {
+            var user = await _userService.GetEventsUserParticipate(id);
+
+            if (!user.Any())
+                return NotFound(new { message = "Não foi encontrado nenhum evento para este usuário" });
+
+            return Ok(user);
         }
     }
 }

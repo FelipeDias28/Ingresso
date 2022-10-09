@@ -94,7 +94,7 @@ namespace Ingresso.Repository
                 throw new Exception("event-not-found");
 
             return currentEvent;
-        }
+    }
 
         private void CheckIfEventIsAvailable(Event currentEvent, int quantityToBuy)
         {

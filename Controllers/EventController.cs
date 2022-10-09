@@ -4,7 +4,6 @@ using Ingresso.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -46,26 +45,43 @@ namespace Ingresso.Controllers
         }
 
         [HttpGet("events")]
-        [Authorize]
         public async Task<IActionResult> GetUsersAsync()
         {
-            var allEvents = await _eventService.GetEvent();
+            var allEvents = await _eventService.GetAllEvent();
 
             return Ok(allEvents);
         }
 
         [HttpGet("event/{id}")]
-        [Authorize]
         public async Task<IActionResult> ListTypeEventByIdAsync([FromRoute] int id)
         {
-            var currentEvent = await _eventService.GetEvent(id);
+            try
+            {
+                var currentEvent = await _eventService.GetEventById(id);
 
-            if (!currentEvent.Any())
-                return NotFound();
+                return Ok(currentEvent);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = ExceptionHandlerService.ExceptionMessage(ex.Message);
 
-            return Ok(currentEvent);
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                    return BadRequest(errorMessage);
+
+                return StatusCode(500);
+            }
         }
 
+        [HttpGet("users-event/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetUsersParticipatingAsync([FromRoute] int id)
+        {
+            var participantsInEvent = await _eventService.GetUsersParticipatingEvent(id);
 
+            if (!participantsInEvent.Any())
+                return NotFound(new { message = " Não foi encontrado nenhum usuário para este evento" });
+
+            return Ok(participantsInEvent);
+        }
     }
 }

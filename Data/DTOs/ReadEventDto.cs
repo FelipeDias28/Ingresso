@@ -1,5 +1,4 @@
 ﻿using Ingresso.Entity;
-using System.ComponentModel.DataAnnotations;
 
 namespace Ingresso.Data.DTOs
 {
