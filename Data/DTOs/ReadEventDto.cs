@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Ingresso.Entity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ingresso.Data.DTOs
 {
     public class ReadEventDto
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public int AvailableQuantity { get; set; }
@@ -13,5 +16,7 @@ namespace Ingresso.Data.DTOs
         public string StartDate { get; set; }
 
         public string EndDate { get; set; }
+
+        public Address Address { get; set; }
     }
 }
