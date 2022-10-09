@@ -38,7 +38,7 @@ namespace Ingresso.Controllers
         }
 
         [HttpGet("type-events")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ListTypeEventAsync()
         {
             var allTypeEvents = await _typeEventService.GetTypeEvent();

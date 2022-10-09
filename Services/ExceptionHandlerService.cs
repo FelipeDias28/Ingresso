@@ -36,6 +36,9 @@
                 case "ticket-not-found":
                     return "O Ingresso não foi encontrado.";
 
+                case "user-already-exists":
+                    return "Usuário já existe";
+
                 default:
                     return null;
             }

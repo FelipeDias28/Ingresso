@@ -41,7 +41,7 @@ namespace Ingresso.Controllers
         }
 
         [HttpGet("status-events")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ListTypeUserAsync()
         {
             var statusEventList = await _statusEventService.GetStatusEvent();

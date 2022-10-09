@@ -38,7 +38,8 @@ namespace Ingresso.Controllers
                 var errorMessage = ExceptionHandlerService.ExceptionMessage(ex.Message);
 
                 if (!string.IsNullOrWhiteSpace(errorMessage))
-                    return NotFound(new { message = errorMessage });
+                    return errorMessage == "Este usuário já existe" ? Conflict(errorMessage) : NotFound(new { message = errorMessage });
+
 
                 return StatusCode(500);
             }

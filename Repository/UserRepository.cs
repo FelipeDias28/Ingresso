@@ -27,6 +27,8 @@ namespace Ingresso.Repository
         {
             await CheckIfTypeUserExists(model);
 
+            await CheckIfUserIsValid(model.Document);
+
             var user = _mapper.Map<User>(model);
 
             try
@@ -126,6 +128,14 @@ namespace Ingresso.Repository
 
             if (typeUser == null)
                 throw new Exception("type-user-not-found");
+        }
+
+        private async Task CheckIfUserIsValid(string document)
+        {
+            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Document.Equals(document));
+
+            if (user != null)
+                throw new Exception("user-already-exists");
         }
     }
 }
