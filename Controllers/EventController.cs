@@ -83,5 +83,25 @@ namespace Ingresso.Controllers
 
             return Ok(participantsInEvent);
         }
+
+        [HttpPut("event-update/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateEventAsync([FromRoute] int id, [FromBody] UpdateEventDto model)
+        {
+            try
+            {
+                var modifiedEvent = await _eventService.UpdateEvent(id, model);
+                return Ok(modifiedEvent);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = ExceptionHandlerService.ExceptionMessage(ex.Message);
+
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                    return NotFound(new { message = errorMessage });
+
+                return StatusCode(500);
+            }
+        }
     }
 }

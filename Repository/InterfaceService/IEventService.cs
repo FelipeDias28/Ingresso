@@ -10,5 +10,6 @@ namespace Ingresso.Repository.InterfaceService
         Task<List<ReadEventDto>> GetAllEvent();
         Task<ReadEventDto> GetEventById(int eventId);
         Task<List<ReadUserDto>> GetUsersParticipatingEvent(int eventId);
+        Task<ReadEventDto> UpdateEvent(int eventId, UpdateEventDto model);
     }
 }

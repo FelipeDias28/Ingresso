@@ -86,6 +86,35 @@ namespace Ingresso.Repository
             return readUser;
         }
 
+        public async Task<ReadEventDto> UpdateEvent(int eventId, UpdateEventDto model)
+        {
+            var currentEvent = await _context.Events.FirstOrDefaultAsync(x => x.Id.Equals(eventId));
+
+            if (currentEvent == null)
+                throw new Exception("event-not-found");
+
+
+            if (!string.IsNullOrEmpty(model.Name))
+                currentEvent.Name = model.Name;
+
+            if (model.AvailableQuantity > 0)
+                currentEvent.AvailableQuantity = model.AvailableQuantity;
+
+            try
+            {
+                _context.Update(currentEvent);
+                await _context.SaveChangesAsync();
+
+                var eventDto = _mapper.Map<ReadEventDto>(currentEvent);
+
+                return eventDto;
+            }
+            catch
+            {
+                throw new Exception();
+            }
+        }
+
         private async Task CheckIfStatusEventExists(int statusEventId)
         {
             var statusEvent = await _context.StatusEvents.AsNoTracking().FirstOrDefaultAsync(x => x.Id.Equals(statusEventId));

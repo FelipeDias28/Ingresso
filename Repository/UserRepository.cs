@@ -96,6 +96,30 @@ namespace Ingresso.Repository
             return readEvent;
         }
 
+        public async Task<ReadUserDto> UpdateUser(Guid userId, UpdateUserDto model)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id.Equals(userId));
+
+            if (user == null)
+                throw new Exception("user-not-found");
+
+            user.UserName = model.UserName;
+
+            try
+            {
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+
+                var userDto = _mapper.Map<ReadUserDto>(user);
+
+                return userDto;
+            }
+            catch
+            {
+                throw new Exception();
+            }
+        }
+
         private async Task CheckIfTypeUserExists(CreateUserDto model)
         {
             var typeUser = await _context.TypeUsers.AsNoTracking().FirstOrDefaultAsync(x => x.Id.Equals(model.TypeUserId));

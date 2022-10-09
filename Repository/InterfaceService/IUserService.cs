@@ -13,5 +13,6 @@ namespace Ingresso.Repository.InterfaceService
         Task<ReadUserDto> GetUsersById(Guid userId);
         Task<dynamic> Authenticate(LoginDto model);
         Task<List<ReadEventDto>> GetEventsUserParticipate(Guid userId);
+        Task<ReadUserDto> UpdateUser(Guid userId, UpdateUserDto model);
     }
 }

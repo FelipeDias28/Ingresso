@@ -14,6 +14,8 @@ namespace Ingresso.Mappings
                 .ForPath(dest => dest.StartDate, map => map.MapFrom(src => src.StartDate.ToString("dd/MM/yyyy")))
                 .ForPath(dest => dest.EndDate, map => map.MapFrom(src => src.EndDate.ToString("dd/MM/yyyy")))
                 .ReverseMap();
+
+            CreateMap<UpdateEventDto, Event>();
         }
     }
 }

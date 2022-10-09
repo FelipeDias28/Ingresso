@@ -33,8 +33,13 @@ namespace Ingresso.Controllers
 
                 return Created($"v1/todos/{newUser.Id}", newUser);
             }
-            catch
+            catch (Exception ex)
             {
+                var errorMessage = ExceptionHandlerService.ExceptionMessage(ex.Message);
+
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                    return NotFound(new { message = errorMessage });
+
                 return StatusCode(500);
             }
         }
@@ -66,7 +71,7 @@ namespace Ingresso.Controllers
                 var errorMessage = ExceptionHandlerService.ExceptionMessage(ex.Message);
 
                 if (!string.IsNullOrWhiteSpace(errorMessage))
-                    return BadRequest(errorMessage);
+                    return NotFound(new { message = errorMessage });
 
                 return StatusCode(500);
             }
@@ -97,6 +102,26 @@ namespace Ingresso.Controllers
                 return NotFound(new { message = "Não foi encontrado nenhum evento para este usuário" });
 
             return Ok(user);
+        }
+
+        [HttpPut("user-update/{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateUserAsync([FromRoute] Guid id, [FromBody] UpdateUserDto model)
+        {
+            try
+            {
+                var user = await _userService.UpdateUser(id, model);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = ExceptionHandlerService.ExceptionMessage(ex.Message);
+
+                if (!string.IsNullOrWhiteSpace(errorMessage))
+                    return NotFound(new { message = errorMessage });
+
+                return StatusCode(500);
+            }
         }
     }
 }
