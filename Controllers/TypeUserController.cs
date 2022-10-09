@@ -1,6 +1,8 @@
 ﻿using Ingresso.Data.Dto;
 using Ingresso.Repository.InterfaceService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,6 +20,7 @@ namespace Ingresso.Controllers
         }
 
         [HttpPost("type-user")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateTypeUserAsync([FromBody] CreateTypeUserDto model)
         {
             if (!ModelState.IsValid)
@@ -35,6 +38,7 @@ namespace Ingresso.Controllers
         }
 
         [HttpGet("type-users")]
+        [Authorize]
         public async Task<IActionResult> GetAllTypeUserAsync()
         {
             var typeUsers = await _typeUserService.GetTypeUser();

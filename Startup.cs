@@ -34,6 +34,31 @@ namespace Ingresso
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ingresso", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
             });
 
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
@@ -58,6 +83,7 @@ namespace Ingresso
 
             services.AddScoped<ITypeUserService, TypeUserRepository>();
             services.AddScoped<IUserService, UserRepository>();
+            services.AddScoped<IStatusEventService, StatusEventRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

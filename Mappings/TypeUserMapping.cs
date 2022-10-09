@@ -8,7 +8,7 @@ namespace Ingresso.Mappings
     {
         public TypeUserMapping()
         {
-            CreateMap<TypeUser, CreateTypeUserDto>().ReverseMap();
+            CreateMap<CreateTypeUserDto, TypeUser>();
         }
     }
 }

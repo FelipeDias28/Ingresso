@@ -19,7 +19,7 @@ namespace Ingresso.Services
                 Subject = new ClaimsIdentity(new[]
                 {
                    new Claim(ClaimTypes.Name, user.Id.ToString()),
-                   new Claim(ClaimTypes.Role, user.TypeUserId.ToString()),
+                   new Claim(ClaimTypes.Role, user.TypeUser.Name),
                 }),
 
                 Expires = DateTime.UtcNow.AddHours(5),

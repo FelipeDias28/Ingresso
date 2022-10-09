@@ -1,6 +1,7 @@
 ﻿using Ingresso.Data.DTOs;
 using Ingresso.Entity;
 using Ingresso.Repository.InterfaceService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Ingresso.Controllers
         }
 
         [HttpPost("user")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto model)
         {
             if (!ModelState.IsValid)
@@ -38,6 +40,7 @@ namespace Ingresso.Controllers
         }
 
         [HttpGet("users")]
+        [Authorize]
         public async Task<IActionResult> GetUsersAsync()
         {
             var allUsers = await _userService.GetUsers(Guid.Empty);
@@ -46,6 +49,7 @@ namespace Ingresso.Controllers
         }
 
         [HttpGet("user/{id}")]
+        [Authorize]
         public async Task<IActionResult> GetUserByIdAsync([FromRoute] Guid id)
         {
             var user = await _userService.GetUsers(id);
