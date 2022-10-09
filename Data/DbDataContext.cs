@@ -11,6 +11,7 @@ namespace Ingresso.Data
         public DbSet<TypeUser> TypeUsers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnConfiguring(
             DbContextOptionsBuilder optionsBuilder)
@@ -28,10 +29,16 @@ namespace Ingresso.Data
                 .WithMany(se => se.Events)
                 .HasForeignKey(ev => ev.StatusEventId);
 
+            modelBuilder.Entity<Event>()
+                .HasOne(ev => ev.Address)
+                .WithMany(ad => ad.Events)
+                .HasForeignKey(ev => ev.AddressId);
+
             modelBuilder.Entity<User>()
                 .HasOne(u => u.TypeUser)
                 .WithMany(tu => tu.Users)
                 .HasForeignKey(u => u.TypeUserId);
+
 
             modelBuilder.Entity<Ticket>()
                 .HasOne(t => t.Event)

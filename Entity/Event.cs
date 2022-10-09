@@ -22,6 +22,12 @@ namespace Ingresso.Entity
         public int StatusEventId { get; set; }
         public virtual StatusEvent StatusEvent { get; set; }
 
+        
+        [JsonIgnore]
+        public int AddressId { get; set; }
+        public virtual Address Address { get; set; }
+
+        
         public virtual List<Ticket> Tickets { get; set; }
     }
 }
