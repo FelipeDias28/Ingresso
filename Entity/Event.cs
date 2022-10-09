@@ -27,7 +27,7 @@ namespace Ingresso.Entity
         public int AddressId { get; set; }
         public virtual Address Address { get; set; }
 
-        
+        [JsonIgnore]
         public virtual List<Ticket> Tickets { get; set; }
     }
 }

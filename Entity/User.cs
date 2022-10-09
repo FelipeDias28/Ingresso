@@ -16,6 +16,7 @@ namespace Ingresso.Entity
         public int TypeUserId { get; set; }
         public virtual TypeUser TypeUser { get; set; }
 
+        [JsonIgnore]
         public virtual List<Ticket> Tickets { get; set; }
     }
 }

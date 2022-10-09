@@ -87,6 +87,7 @@ namespace Ingresso
             services.AddScoped<ITypeEventService, TypeEventRepository>();
             services.AddScoped<IEventService, EventRepository>();
             services.AddScoped<IAddressService, AddressRepository>();
+            services.AddScoped<ITicketService, TicketRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

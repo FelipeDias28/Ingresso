@@ -33,6 +33,9 @@
                 case "address-not-found":
                     return "O endereço não foi encontrado.";
 
+                case "ticket-not-found":
+                    return "O Ingresso não foi encontrado.";
+
                 default:
                     return null;
             }
