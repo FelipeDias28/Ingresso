@@ -8,7 +8,7 @@ namespace Ingresso.Repository.InterfaceService
 {
     public interface IUserService
     {
-        Task<User> CreateUser(CreateUserDto model);
+        Task<ReadUserDto> CreateUser(CreateUserDto model);
         Task<List<ReadUserDto>> GetAllUsers();
         Task<ReadUserDto> GetUsersById(Guid userId);
         Task<dynamic> Authenticate(LoginDto model);

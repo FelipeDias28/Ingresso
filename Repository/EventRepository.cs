@@ -52,7 +52,7 @@ namespace Ingresso.Repository
 
         public async Task<List<ReadEventDto>> GetAllEvent()
         {
-            var eventList = await _context.Events.AsNoTracking().ToListAsync();
+            var eventList = await _context.Events.ToListAsync();
 
             List<ReadEventDto> readEventDtos = _mapper.Map<List<ReadEventDto>>(eventList);
             return readEventDtos;

@@ -23,7 +23,7 @@ namespace Ingresso.Repository
             _mapper = mapper;
         }
 
-        public async Task<User> CreateUser(CreateUserDto model)
+        public async Task<ReadUserDto> CreateUser(CreateUserDto model)
         {
             await CheckIfTypeUserExists(model);
 
@@ -36,7 +36,9 @@ namespace Ingresso.Repository
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
 
-                return user;
+                var userDto = _mapper.Map<ReadUserDto>(user);
+
+                return userDto;
             }
             catch
             {
