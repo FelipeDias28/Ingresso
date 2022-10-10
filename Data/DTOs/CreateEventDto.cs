@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ingresso.Data.DTOs
 {
@@ -14,10 +15,10 @@ namespace Ingresso.Data.DTOs
         public double Value { get; set; }
 
         [Required(ErrorMessage = "O campo Data Inicial é obrigatório.")]
-        public string StartDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         [Required(ErrorMessage = "O campo Data de Encerramento é obrigatório.")]
-        public string EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         [Required(ErrorMessage = "O campo ID do Tipo de Evento é obrigatório.")]
         public int TypeEventId { get; set; }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Ingresso.Data.DTOs;
 using Ingresso.Entity;
+using System;
 
 namespace Ingresso.Mappings
 {
